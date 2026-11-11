@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anjos de Patas - Gestão de Estoque</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+    
+       <div class="header-container">
+        <img src="assets/logo.png" alt="Anjos de Patas" class="logo-img">
+        <h1>🐾 Anjos de Patas - Sistema de Gestão</h1>
+    </div>
+    </header>
+
+    <!-- NAVEGAÇÃO POR ABAS -->
+    <nav class="menu-tabs">
+        <button class="active" onclick="abrirAba('tab-vendas')">🛒 Vendas</button>
+        <button onclick="abrirAba('tab-estoque')">📦 Produtos & Estoque</button>
+        <button onclick="abrirAba('tab-criticos')">⚠️ Estoque Crítico</button>
+        <button onclick="abrirAba('tab-relatorios')">📊 Relatórios de Vendas</button>
+    </nav>
+
+    <main>
+        <!-- 1. ABA DE VENDAS -->
+        <section id="tab-vendas" class="tab-content active">
+            <h2>🛒 Registrar Nova Venda</h2>
+            <form id="form-venda" class="form-grid">
+    <div class="form-group">
+        <label for="venda_codigo">Código do Produto:</label>
+        <input type="number" id="venda_codigo" required>
+    </div>
+    <div class="form-group">
+        <label for="venda_qtd">Quantidade Vendida:</label>
+        <input type="number" id="venda_qtd" min="1" value="1" required>
+    </div>
+    <div class="form-group">
+        <label for="venda_pagamento">Forma de Pagamento:</label>
+        <select id="venda_pagamento" required>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="PIX">PIX</option>
+            <option value="Cartão de Débito">Cartão de Débito</option>
+            <option value="Cartão de Crédito">Cartão de Crédito</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit" class="btn-primary">Finalizar Venda</button>
+    </div>
+</form>
+            <div id="mensagem-venda" class="status-msg"></div>
+        </section>
+
+        <!-- 2. ABA DE ESTOQUE -->
+        <section id="tab-estoque" class="tab-content">
+            <h2 id="titulo-form">Cadastrar / Editar Produto</h2>
+            <form id="form-produto" class="form-grid">
+                <div class="form-group">
+                    <label for="codigo">Código:</label>
+                    <input type="number" id="codigo" required>
+                </div>
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoria:</label>
+                    <input type="text" id="categoria" required>
+                </div>
+                <div class="form-group">
+                    <label for="fornecedor">Fornecedor:</label>
+                    <input type="text" id="fornecedor" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantidade">Qtd Atual:</label>
+                    <input type="number" id="quantidade" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="qnt_minima">Qtd Mínima:</label>
+                    <input type="number" id="qnt_minima" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="preco_compra">Preço (R$):</label>
+                    <input type="number" id="preco_compra" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="data_vencimento">Data Vencimento (Opcional):</label>
+                    <input type="date" id="data_vencimento">
+                </div>
+                <div>
+                    <button type="submit" id="btn-submit" class="btn-primary">Salvar Produto</button>
+                    <button type="button" id="btn-cancelar" class="btn-secondary" style="display:none;" onclick="resetarFormulario()">Cancelar</button>
+                </div>
+            </form>
+            <div id="mensagem-status" class="status-msg"></div>
+
+            <br><hr><br>
+
+            <h2>Lista de Produtos Cadastrados</h2>
+            <button class="btn-secondary" onclick="carregarProdutos()">🔄 Atualizar Lista</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Fornecedor</th>
+                        <th>Preço</th>
+                        <th>Qtd. Atual</th>
+                        <th>Qtd. Mínima</th>
+                        <th>Vencimento</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-produtos"></tbody>
+            </table>
+        </section>
+
+        <!-- 3. ABA DE RELATÓRIO CRÍTICO -->
+        <section id="tab-criticos" class="tab-content">
+            <h2>⚠️ Relatório de Estoque Crítico</h2>
+            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <div class="form-group">
+                    <label for="dias_alerta">Dias para alerta de vencimento:</label>
+                    <input type="number" id="dias_alerta" value="30">
+                </div>
+                <button class="btn-secondary" onclick="carregarCriticos()">Gerar Relatório</button>
+            </div>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Qtd. Atual</th>
+                        <th>Qtd. Mínima</th>
+                        <th>Vencimento</th>
+                        <th>Alertas</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-criticos"></tbody>
+            </table>
+        </section>
+
+        <!-- 4. ABA DE RELATÓRIOS DE VENDAS -->
+        <section id="tab-relatorios" class="tab-content">
+            <h2>📊 Relatórios de Vendas</h2>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary" onclick="carregarVendas('diario')">Vendas de Hoje</button>
+                <button class="btn-secondary" onclick="carregarVendas('mensal')">Vendas do Mês</button>
+            </div>
+            <br>
+            <h3 id="titulo-relatorio-vendas">Selecione o período desejado</h3>
+            <h4 id="total-vendas-valor" style="margin: 10px 0; color: var(--primary-brown);"></h4>
+            <table>
+                <thead>
+                    <tr>
+                    <th>ID</th>
+                    <th>Cód. Produto</th>
+                    <th>Nome Produto</th>
+                    <th>Qtd Vendida</th>
+                    <th>Valor Total</th>
+                    <th>Pagamento</th>
+                    <th>Data/Hora</th>
+        </tr>
+    </thead>
+    <tbody id="tbody-relatorio-vendas"></tbody>
+</table>
+        </section>
+    </main>
+
+    <script>
+    const API_URL = "http://127.0.0.1:8000/api";
+    let modoEdicao = false;
+
+    // Controle de Abas
+    function abrirAba(idAba) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.menu-tabs button').forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(idAba).classList.add('active');
+        if (event && event.target) {
+            event.target.classList.add('active');
+        }
+
+        if (idAba === 'tab-estoque') carregarProdutos();
+        if (idAba === 'tab-criticos') carregarCriticos();
+        if (idAba === 'tab-relatorios') carregarVendas('diario');
+    }
+
+    // 1. CARREGAR PRODUTOS
+    async function carregarProdutos() {
+        const tbody = document.getElementById('tbody-produtos') || document.querySelector('#tabela-produtos tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>Carregando...</td></tr>";
+
+        try {
+            const res = await fetch(`${API_URL}/produtos`);
+            const dados = await res.json();
+            tbody.innerHTML = "";
+
+            // Trata se o retorno for Array simples ou objeto { produtos: [...] }
+            const listaProdutos = Array.isArray(dados) ? dados : (dados.produtos || []);
+
+            if (listaProdutos.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;'>Nenhum produto cadastrado.</td></tr>";
+                return;
+            }
+
+            listaProdutos.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.codigo}</td>
+                    <td>${p.nome}</td>
+                    <td>${p.categoria || '-'}</td>
+                    <td>${p.fornecedor || '-'}</td>
+                    <td>R$ ${parseFloat(p.preco_compra || 0).toFixed(2)}</td>
+                    <td>${p.quantidade}</td>
+                    <td>${p.qnt_minima}</td>
+                    <td>${p.data_vencimento || 'N/A'}</td>
+                    <td>
+                        <button onclick="prepararEdicao(${JSON.stringify(p).replace(/"/g, '&quot;')})">✏️ Editar</button>
+                        <button onclick="excluirProduto(${p.codigo})">❌ Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (err) {
+            console.error("Erro em carregarProdutos:", err);
+            tbody.innerHTML = "<tr><td colspan='9' style='color:red; text-align:center;'>Erro ao ligar à API.</td></tr>";
+        }
+    }
+
+    // 2. REGISTRAR VENDA
+    const formVenda = document.getElementById('form-venda');
+    if (formVenda) {
+        formVenda.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('mensagem-venda');
+
+            const payload = {
+                codigo_produto: parseInt(document.getElementById('venda_codigo').value),
+                quantidade: parseInt(document.getElementById('venda_qtd').value),
+                metodo_pagamento: document.getElementById('venda_pagamento').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/vendas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const dados = await res.json();
+
+                if (res.ok) {
+                    status.innerHTML = `<p style="color: green;">✅ ${dados.mensagem || 'Venda registrada com sucesso!'}</p>`;
+                    document.getElementById('form-venda').reset();
+                } else {
+                    status.innerHTML = `<p style="color: red;">❌ Erro: ${dados.detail}</p>`;
+                }
+            } catch (err) {
+                status.innerHTML = `<p style="color: red;">❌ Erro de conexão com a API.</p>`;
+            }
+        });
+    }
+
+    // 3. RELATÓRIO DE VENDAS (DIÁRIO / MENSAL - CORRIGIDO)
+    async function carregarVendas(tipo = 'diario') {
+        const tbody = document.getElementById('tbody-relatorio-vendas') 
+                    || document.querySelector('#tabela-vendas tbody') 
+                    || document.querySelector('tbody');
+        
+        const titulo = document.getElementById('titulo-relatorio-vendas');
+        const totalContainer = document.getElementById('total-vendas-valor');
+
+        if (!tbody) {
+            console.error("❌ Elemento <tbody> da tabela não encontrado.");
+            return;
+        }
+
+        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding: 15px;'>Carregando vendas...</td></tr>";
+
+        const endpoint = tipo === 'diario' ? 'diario' : 'mes';
+        const url = `${API_URL}/relatorios/vendas/${endpoint}`;
+
+        if (titulo) {
+            titulo.innerText = tipo === 'diario' ? "Vendas de Hoje" : "Vendas deste Mês";
+        }
+
+        try {
+            const res = await fetch(url);
+            
+            if (!res.ok) {
+                throw new Error(`Erro na API: ${res.status}`);
+            }
+
+            const dados = await res.json();
+            
+            // Suporta retorno direto como Array [...] ou objeto { vendas: [...] }
+            const vendas = Array.isArray(dados) ? dados : (dados.vendas || []);
+
+            tbody.innerHTML = "";
+
+            if (vendas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan='7' style='text-align:center; padding: 15px;'>Nenhuma venda registrada ${tipo === 'diario' ? 'hoje' : 'neste mês'}.</td></tr>`;
+                if (totalContainer) totalContainer.innerText = "Faturamento Total: R$ 0.00";
+                return;
+            }
+
+            // Calcula o total acumulado das vendas retornadas
+            let faturamentoTotal = 0;
+
+            vendas.forEach(v => {
+                const valorNum = parseFloat(v.valor_total || 0);
+                faturamentoTotal += valorNum;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>#${v.id}</strong></td>
+                    <td>${v.codigo_produto || '-'}</td>
+                    <td>${v.nome_produto || v.nome || 'Produto Não Encontrado'}</td>
+                    <td>${v.quantidade_vendida ?? v.quantidade ?? 0}</td>
+                    <td>R$ ${valorNum.toFixed(2)}</td>
+                    <td><span class="badge badge-pagamento">${v.metodo_pagamento || 'N/A'}</span></td>
+                    <td>${v.data_venda || v.hora || v.data_hora || '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (totalContainer) {
+                totalContainer.innerText = `Faturamento Total: R$ ${faturamentoTotal.toFixed(2)}`;
+            }
+
+        } catch (err) {
+            console.error('Erro ao carregar relatórios de vendas:', err);
+            tbody.innerHTML = "<tr><td colspan='7' style='color:red; text-align:center; padding: 15px;'>Erro ao carregar vendas. Verifique a API.</td></tr>";
+        }
+    }
+
+    // Atalhos para compatibilidade com botões específicos
+    function carregarVendasHoje() { carregarVendas('diario'); }
+    function carregarVendasMes() { carregarVendas('mensal'); }
+
+    // 4. CARREGAR RELATÓRIO CRÍTICO
+    async function carregarCriticos() {
+    const inputDias = document.getElementById('dias_alerta');
+    const dias = inputDias ? (inputDias.value || 30) : 30;
+    const tbody = document.getElementById('tbody-criticos') || document.querySelector('#tabela-criticos tbody');
+    
+    if (!tbody) return;
+
+    tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Carregando alertas...</td></tr>";
+
+    try {
+        const res = await fetch(`${API_URL}/relatorios/critico?dias_alerta=${dias}`);
+        const dados = await res.json();
+        tbody.innerHTML = "";
+
+        // Lê a lista de produtos envelopada no objeto { produtos: [...] }
+        const produtos = Array.isArray(dados) ? dados : (dados.produtos || []);
+
+        if (produtos.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;'>Nenhum item crítico encontrado.</td></tr>";
+            return;
+        }
+
+        produtos.forEach(p => {
+            let alertasHTML = "";
+            
+            if (Array.isArray(p.alertas) && p.alertas.length > 0) {
+                alertasHTML = p.alertas.map(a => `<span class="badge badge-alerta" style="margin-right: 5px;">${a}</span>`).join(' ');
+            } else {
+                alertasHTML = 'Sem alertas';
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${p.codigo}</td>
+                <td>${p.nome}</td>
+                <td>${p.quantidade}</td>
+                <td>${p.qnt_minima}</td>
+                <td>${p.data_vencimento || 'N/A'}</td>
+                <td>${alertasHTML}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error("Erro em carregarCriticos:", err);
+        tbody.innerHTML = "<tr><td colspan='6' style='color:red; text-align:center;'>Erro ao gerar relatório crítico.</td></tr>";
+    }
+}
+
+    // SALVAR OU EDITAR PRODUTO
+    const formProduto = document.getElementById('form-produto');
+    if (formProduto) {
+        formProduto.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const codigo = parseInt(document.getElementById('codigo').value);
+            const status = document.getElementById('mensagem-status');
+            const url = modoEdicao ? `${API_URL}/produtos/${codigo}` : `${API_URL}/produtos`;
+            const method = modoEdicao ? 'PUT' : 'POST';
+
+            const payload = {
+                codigo: codigo,
+                nome: document.getElementById('nome').value,
+                categoria: document.getElementById('categoria').value,
+                fornecedor: document.getElementById('fornecedor').value,
+                quantidade: parseInt(document.getElementById('quantidade').value),
+                qnt_minima: parseInt(document.getElementById('qnt_minima').value),
+                preco_compra: parseFloat(document.getElementById('preco_compra').value),
+                data_vencimento: document.getElementById('data_vencimento').value || null
+            };
+
+            try {
+                const res = await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const dados = await res.json();
+                if (res.ok) {
+                    status.innerHTML = `<p style="color: green;">✅ ${dados.mensagem || 'Operação realizada com sucesso!'}</p>`;
+                    resetarFormulario();
+                    carregarProdutos();
+                } else {
+                    status.innerHTML = `<p style="color: red;">❌ Erro: ${dados.detail}</p>`;
+                }
+            } catch (err) {
+                status.innerHTML = `<p style="color: red;">❌ Erro ao conectar com o servidor.</p>`;
+            }
+        });
+    }
+
+    function prepararEdicao(p) {
+        modoEdicao = true;
+        document.getElementById('titulo-form').innerText = `Editar Produto #${p.codigo}`;
+        document.getElementById('btn-submit').innerText = "Atualizar Produto";
+        if (document.getElementById('btn-cancelar')) document.getElementById('btn-cancelar').style.display = "inline-block";
+        document.getElementById('codigo').value = p.codigo;
+        document.getElementById('codigo').disabled = true;
+        document.getElementById('nome').value = p.nome;
+        document.getElementById('categoria').value = p.categoria;
+        document.getElementById('fornecedor').value = p.fornecedor;
+        document.getElementById('quantidade').value = p.quantidade;
+        document.getElementById('qnt_minima').value = p.qnt_minima;
+        document.getElementById('preco_compra').value = p.preco_compra;
+        document.getElementById('data_vencimento').value = p.data_vencimento || "";
+    }
+
+    function resetarFormulario() {
+        modoEdicao = false;
+        document.getElementById('titulo-form').innerText = "Cadastrar / Editar Produto";
+        document.getElementById('btn-submit').innerText = "Salvar Produto";
+        if (document.getElementById('btn-cancelar')) document.getElementById('btn-cancelar').style.display = "none";
+        document.getElementById('codigo').disabled = false;
+        if (formProduto) formProduto.reset();
+    }
+
+    async function excluirProduto(codigo) {
+        if (!confirm(`Deseja excluir o produto ${codigo}?`)) return;
+        try {
+            const res = await fetch(`${API_URL}/produtos/${codigo}`, { method: 'DELETE' });
+            if (res.ok) { carregarProdutos(); }
+        } catch (err) { alert("Erro ao excluir produto."); }
+    }
+</script>
+</body>
+</html>

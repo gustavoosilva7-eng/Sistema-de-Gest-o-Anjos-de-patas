@@ -1,0 +1,492 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+    --primary-yellow: #FFCE38;
+    --primary-brown: #4A2810;
+    --primary-brown-light: #6D3D19;
+    --primary-red: #D31D24;
+    --primary-red-hover: #B5131A;
+    --bg-cream: #F8F6F0;
+    --bg-card: #FFFFFF;
+    --text-dark: #2B1810;
+    --border-color: #E6DCB8;
+    --shadow: 0 4px 12px rgba(74, 40, 16, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+    --primary-yellow: #FFCE38;
+    --primary-brown: #4A2810;
+    --primary-brown-light: #6D3D19;
+    --primary-red: #D31D24;
+    --primary-red-hover: #B5131A;
+    --bg-card: rgba(255, 255, 255, 0.94); /* Fundo semi-transparente para destacar os bichinhos */
+    --text-dark: #2B1810;
+    --border-color: #E6DCB8;
+    --shadow: 0 10px 25px rgba(74, 40, 16, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Fundo com a Imagem Ilustrada Anime + Efeito Fixo */
+body {
+    background-image: url('assets/bg-anime.png'); /* Nome da tua imagem salva */
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* Cabeçalho superior */
+header {
+    background: linear-gradient(135deg, #FFF0B8 0%, var(--primary-yellow) 100%);
+    border-bottom: 4px solid var(--primary-brown);
+    padding: 12px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.logo-img {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+}
+
+header h1 {
+    font-family: 'Fredoka', cursive;
+    color: var(--primary-brown);
+    font-size: 2rem;
+    margin: 0;
+}
+
+/* Menu de Abas */
+nav.menu-tabs {
+    background: var(--primary-brown);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 20px;
+}
+
+nav.menu-tabs button {
+    background: transparent;
+    color: #FFF;
+    font-family: 'Fredoka', cursive;
+    font-size: 1.05rem;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+nav.menu-tabs button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+nav.menu-tabs button.active {
+    background: var(--primary-yellow);
+    color: var(--primary-brown);
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Layout Principal com Animação de Flutuação */
+main {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Cartões com fundo de vidro/efeito suave (Glassmorphism) */
+.tab-content {
+    display: none;
+    background: var(--bg-card);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    padding: 32px;
+    border: 3px solid #FFF;
+    box-shadow: var(--shadow);
+    animation: surgirAba 0.4s ease-out forwards;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Animação suave de transição entre abas */
+@keyframes surgirAba {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Formulários */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 700;
+    color: var(--primary-brown);
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #E2D5C3;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background-color: #FFFDF9;
+    transition: all 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-yellow);
+    box-shadow: 0 0 0 4px rgba(255, 206, 56, 0.4);
+}
+
+button.btn-primary {
+    background-color: var(--primary-red);
+    color: white;
+    font-family: 'Fredoka', cursive;
+    font-size: 1.05rem;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(211, 29, 36, 0.3);
+}
+
+button.btn-primary:hover {
+    background-color: var(--primary-red-hover);
+    transform: scale(1.03);
+}
+
+button.btn-secondary {
+    background-color: var(--primary-brown);
+    color: white;
+    font-family: 'Fredoka', cursive;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button.btn-secondary:hover {
+    background-color: var(--primary-brown-light);
+}
+
+/* Tabelas com acabamento limpo */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 15px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #FFF;
+    border: 1px solid var(--border-color);
+}
+
+th {
+    background-color: #FFF8DF;
+    color: var(--primary-brown);
+    font-family: 'Fredoka', cursive;
+    padding: 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #F0E6D2;
+}
+
+/* Badges de Estado */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.badge-pagamento {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row; /* Garante alinhamento lado a lado */
+    gap: 15px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.logo-img {
+    height: 60px; /* Ajuste da altura da imagem */
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+header h1 {
+    font-family: 'Fredoka', cursive;
+    color: var(--primary-brown);
+    font-size: 2rem;
+    margin: 0;
+    white-space: nowrap;
+}
+/* Navegação por Abas */
+nav.menu-tabs {
+    background: var(--primary-brown);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 20px;
+}
+
+nav.menu-tabs button {
+    background: transparent;
+    color: #FFF;
+    font-family: 'Fredoka', cursive;
+    font-size: 1.05rem;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+nav.menu-tabs button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+nav.menu-tabs button.active {
+    background: var(--primary-yellow);
+    color: var(--primary-brown);
+    font-weight: 700;
+}
+
+main {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.tab-content {
+    display: none;
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 28px;
+    border: 2px solid var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+h2 {
+    font-family: 'Fredoka', cursive;
+    color: var(--primary-brown);
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+/* Formulários */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 700;
+    color: var(--primary-brown);
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #E2D5C3;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    background-color: #FFFDF9;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-yellow);
+    box-shadow: 0 0 0 4px rgba(255, 206, 56, 0.3);
+}
+
+button.btn-primary {
+    background-color: var(--primary-red);
+    color: white;
+    font-family: 'Fredoka', cursive;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button.btn-primary:hover {
+    background-color: var(--primary-red-hover);
+}
+
+button.btn-secondary {
+    background-color: var(--primary-brown);
+    color: white;
+    font-family: 'Fredoka', cursive;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+/* Tabelas */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+th {
+    background-color: #FFF8DF;
+    color: var(--primary-brown);
+    font-family: 'Fredoka', cursive;
+    padding: 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #F0E6D2;
+    background: #FFF;
+}
+
+/* Badges de Alerta */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    margin-right: 5px;
+}
+
+.badge-vencido {
+    background: #FEEBEB;
+    color: #C92A2A;
+    border: 1px solid #FFC9C9;
+}
+
+.badge-alerta {
+    background: #FFF3CD;
+    color: #856404;
+    border: 1px solid #FFEBAA;
+}
+
+.badge-baixo {
+    background: #EBF3FE;
+    color: #1E6091;
+    border: 1px solid #BEE0FF;
+}
+
+/* Mensagens de Feedback */
+.status-msg {
+    margin-top: 15px;
+    font-weight: 700;
+}
+select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #E2D5C3;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    background-color: #FFFDF9;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--primary-yellow);
+    box-shadow: 0 0 0 4px rgba(255, 206, 56, 0.3);
+}
+
+.badge-pagamento {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
+}
